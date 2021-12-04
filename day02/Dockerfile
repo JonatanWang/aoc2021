@@ -1,6 +1,9 @@
-FROM node:17-slim
-COPY . /app
-WORKDIR /app
-RUN yarn install
+FROM gradle:alpine as BASE
+WORKDIR /src
+COPY ./ .
+RUN gradle build
 
-CMD node /app/index.js
+FROM openjdk:17-alpine
+COPY --from=BASE /src/build/libs/aoc.jar /app.jar
+COPY input.txt .
+CMD java -jar /app.jar
