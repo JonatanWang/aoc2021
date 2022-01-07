@@ -42,6 +42,6 @@ public class AppTest {
     }
 
     @Test void part2MultipliesInput() {
-        assertEquals(2, classUnderTest.getSolutionPart2());
+        assertEquals(0, classUnderTest.getSolutionPart2());
     }
 }

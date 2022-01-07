@@ -6,6 +6,7 @@ package aoc;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,17 +26,8 @@ public class App {
         var digitCnt = new int[recordLength];
         Arrays.fill(digitCnt, 0);
 
-        for (char[] record: input) {
-            for (var i = 0; i < record.length; i ++) {
-                switch (record[i]) {
-                    case '1':
-                        digitCnt[i] ++;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        countDigits(digitCnt, input);
+
         var gammaRateByBit = new char[recordLength];
         var epsilonRateByBit = new char[recordLength];
         for (var i = 0; i < digitCnt.length; i ++) {
@@ -58,11 +50,132 @@ public class App {
         return res;
     }
 
-    public Integer getSolutionPart2() {
-        var cnt = 0;
+    private int[] countDigits(int[] digitCnt, List<char[]> input) {
+        for (char[] record : input) {
+            for (var i = 0; i < record.length; i++) {
+                switch (record[i]) {
+                    case '1':
+                        digitCnt[i]++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
-        return cnt;
+        return digitCnt;
     }
+
+    public Integer getSolutionPart2() {
+        var res = 0;
+        var recordLength = input.get(0).length;
+        var tempList = input;
+
+        for(var i = 0; i < recordLength; i ++) {
+            var tmp1 = new ArrayList<char[]>();
+            var tmp0 = new ArrayList<char[]>();
+
+            for (char[] record : tempList) {
+                if (record[i] == '1') {
+                    tmp1.add(record);
+                } else {
+                    tmp0.add(record);
+                }
+            }
+            tempList = tmp1.size() >= tmp0.size() ? tmp1 : tmp0;
+        }
+
+        var tempListCo2 = input;
+
+        for(var i = 0; i < recordLength; i ++) {
+            var tmp1 = new ArrayList<char[]>();
+            var tmp0 = new ArrayList<char[]>();
+            if (tempListCo2.size() == 1) break;
+            for (char[] record : tempListCo2) {
+                if (record[i] == '0') {
+                    tmp0.add(record);
+                } else {
+                    tmp1.add(record);
+                }
+            }
+            tempListCo2 = tmp0.size() <= tmp1.size() ? tmp0 : tmp1;
+        }
+        System.out.println("TempList: ");
+        tempList.stream().forEach(System.out::println);
+        System.out.println("TempListCo2 length: " + tempListCo2.size());
+        tempListCo2.stream().forEach(System.out::println);
+        var oxygen = tempList.get(0);
+        var co2 = tempListCo2.get(0);
+
+        int  oxygenRate = 0, co2Rate = 0;
+        for(int i = 0; i < recordLength; i ++) {
+            if (oxygen[i] == '1') {
+                oxygenRate += Math.pow(2, recordLength - 1 - i);
+            }
+            if (co2[i] == '1') {
+                co2Rate += Math.pow(2, recordLength - 1 - i);
+            }
+        }
+
+        res = oxygenRate * co2Rate;
+
+        return res;
+    }
+/*
+
+    public Integer getSolutionPart2() {
+        var res = 0;
+        var reportLength = input.size();
+        var recordLength = input.get(0).length;
+        var digitCnt = new int[recordLength];
+        Arrays.fill(digitCnt, 0);
+        var tempList = input;
+
+        for (var i = 0; i < digitCnt.length; i ++) {
+            countDigits(digitCnt, tempList);
+            var flag = digitCnt[i] < reportLength /  2 ?  '0' : '1';
+            var temp = tempList;
+            for (var j = 0; j < tempList.size(); j ++) {
+                if (flag == tempList.get(j)[i]) {
+                    temp.add(tempList.get(j));
+                }
+                tempList = temp;
+            }
+        }
+
+        Arrays.fill(digitCnt, 0);
+        var tempListCO2 = input;
+        for (var i = 0; i < digitCnt.length; i ++) {
+            countDigits(digitCnt, tempListCO2);
+            var flag = digitCnt[i] < reportLength /  2 ?  '1' : '0';
+            var temp = tempListCO2;
+            for (var j = 0; j < tempListCO2.size(); j ++) {
+                if (flag == tempListCO2.get(j)[i]) {
+                    temp.add(tempListCO2.get(j));
+                }
+                tempListCO2 = temp;
+            }
+        }
+
+        System.out.println("*******" + tempList.size() + "*****" + tempListCO2.size());
+        var oxygen = tempList.get(0);
+        var co2 = tempListCO2.get(0);
+
+        int  oxygenRate = 0, co2Rate = 0;
+        for(int i = 0; i < recordLength; i ++) {
+            if (oxygen[i] == '1') {
+                oxygenRate += Math.pow(2, recordLength - 1 - i);
+            }
+            if (co2[i] == '1') {
+                co2Rate += Math.pow(2, recordLength - 1 - i);
+            }
+        }
+
+        res = oxygenRate * co2Rate;
+
+        return res;
+    }
+*/
 
     public static void main(String[] args) throws IOException {
 
