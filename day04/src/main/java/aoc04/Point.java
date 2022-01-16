@@ -1,4 +1,4 @@
-package aoc;
+package aoc04;
 
 public class Point {
     private int value;
