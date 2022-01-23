@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class App {
@@ -24,9 +25,9 @@ public class App {
         var searchResult = findBingoBoardIndexAndTriggerNumber();
         var bingoBoard = boards.get(searchResult[0]);
         var triggerNumber = searchResult[1];
-
+        System.out.println("Trigger " + triggerNumber);
         var sumOfUnmarkedNumbers = bingoBoard.getSumOfUnmarkedNumbers();
-
+        System.out.println("Sum Unmarked: " + sumOfUnmarkedNumbers);
         return sumOfUnmarkedNumbers * triggerNumber;
     }
 
@@ -44,10 +45,42 @@ public class App {
         throw new Exception("No bingo board found!");
     }
 
-    public Integer getSolutionPart2() {
-        var res = 0;
+    public Integer getSolutionPart2() throws Exception {
+        var searchResult = findLastBingoBoardIndexAndTriggerNumber();
+        var bingoBoard = boards.get(searchResult[0]);
+        var triggerNumber = searchResult[1];
+        System.out.println("Trigger " + triggerNumber);
+        var sumOfUnmarkedNumbers = bingoBoard.getSumOfUnmarkedNumbers();
+        System.out.println("Sum Unmarked: " + sumOfUnmarkedNumbers);
 
-        return res;
+        return sumOfUnmarkedNumbers * triggerNumber;
+    }
+
+    private int[] findLastBingoBoardIndexAndTriggerNumber() {
+        try {
+            for (var i = 0; i < numbers.size(); i ++) {
+                var triggerNumber = numbers.get(i);
+                for (var j = 0; j < boards.size(); j ++) {
+                    var currentBoard = boards.get(j);
+                    var hadBingoBefore = currentBoard.isBingo();
+                    currentBoard.markNumber(triggerNumber);
+                    var hasBingoNow = currentBoard.isBingo();
+
+                    if (!hadBingoBefore && hasBingoNow && isAllBoardsBingo()) {
+                        return new int[]{j, triggerNumber};
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        return null;
+        //throw new Exception("No bingo board found!");
+    }
+
+    private boolean isAllBoardsBingo() {
+        return boards.stream().allMatch(board -> board.isBingo());
     }
 
     public static void main(String[] args) throws Exception {
