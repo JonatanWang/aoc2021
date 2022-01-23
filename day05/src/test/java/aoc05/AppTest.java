@@ -35,7 +35,7 @@ public class AppTest {
     }
 
     @Test void part1SumsInput() throws Exception {
-        assertEquals(0, classUnderTest.getSolutionPart1());
+        assertEquals(5, classUnderTest.getSolutionPart1());
     }
 
     @Test void part2MultipliesInput() {
