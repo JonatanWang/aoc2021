@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class App {
     private static final Board board = new Board();
@@ -16,10 +18,6 @@ public class App {
     }
 
     public Integer getSolutionPart1() {
-        var selectedLines = lines
-                .stream()
-                .filter(line -> line.x1 == line.x2 || line.y1 == line.y2)
-                .collect(Collectors.toList());
 
         for (Line line:
                 lines) {
@@ -43,20 +41,61 @@ public class App {
             }
         }
 
-        int cnt = 0;
-        for(var i = 0; i < board.points.length; i ++) {
-            for(var j = 0; j < board.points[0].length; j ++) {
-                if(board.points[i][j] >= 2) cnt ++;
-            }
-        }
-
-        return cnt;
+        var res = Stream
+                .of(board.points)
+                .flatMapToInt(IntStream::of)
+                .filter(p -> p >= 2)
+                .count();
+        return (int) res;
     }
 
     public Integer getSolutionPart2() {
-        var res = 0;
+        for (Line line:
+                lines) {
+            if (line.x1 == line.x2 && line.y1 == line.y2) {
+                board.points[line.x1][line.y1] ++;
+            }
+            else if (line.x1 == line.x2) {
+                var start = Integer.min(line.y1, line.y2);
+                var end = Integer.max(line.y1, line.y2);
+                for(var i = start; i <= end; i ++) {
+                    board.points[line.x1][i] ++;
+                }
+            } else if (line.y1 == line.y2) {
+                var start = Integer.min(line.x1, line.x2);
+                var end = Integer.max(line.x1, line.x2);
+                for(var j = start; j <= end; j ++) {
+                    board.points[j][line.y1] ++;
+                }
+            } else if (line.x1 == line.y1 && line.x2 == line.y2){
 
-        return res;
+                var start = Integer.min(line.x1, line.x2);
+                var end = Integer.max(line.x1, line.x2);
+
+                for (var i= start; i <= end; i ++) {
+                    board.points[i][i] ++;
+                }
+
+            } else if (line.x1 == line.y2 && line.x2 == line.y1) {
+
+                var start= Integer.min(line.x1, line.x2);
+                var end = Integer.max(line.x1, line.x2);
+
+                for (int i= start, j = end; i <= end && j >= start; i ++, j --) {
+                    board.points[i][j] ++;
+                }
+            } else {
+
+            }
+        }
+
+        var res = Stream
+                .of(board.points)
+                .flatMapToInt(IntStream::of)
+                .filter(p -> p >= 2)
+                .count();
+
+        return (int) res;
     }
 
     public static void main(String[] args) throws Exception {
