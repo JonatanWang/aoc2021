@@ -52,6 +52,14 @@ public class App {
     public Integer getSolutionPart2() {
         for (Line line:
                 lines) {
+            var numOfPoints = Math.max(Math.abs(line.x1 - line.x2), Math.abs(line.y1 - line.y2)) + 1;
+            var offsetX = Integer.compare(line.x2, line.x1);
+            var offsetY = Integer.compare(line.y2, line.y1);
+            System.out.println("offsetX: " + offsetX + " || offsetY: " + offsetY + " || numOfpoints: " + numOfPoints);
+            for (var i = 0; i < numOfPoints; i ++) {
+                board.points[line.x1 + i * offsetX][line.y1 + i * offsetY] ++;
+            }
+            /**
             if (line.x1 == line.x2 && line.y1 == line.y2) {
                 board.points[line.x1][line.y1] ++;
             }
@@ -91,6 +99,7 @@ public class App {
                     board.points[line.x1 - i][line.y1 - i] ++;
                 }
             }
+             */
         }
 
         //board.show();
