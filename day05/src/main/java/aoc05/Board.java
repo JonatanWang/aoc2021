@@ -12,5 +12,27 @@ public class Board {
         }
     }
 
+    public void show() {
+        var maxX = 0; var maxY = 0;
+        for(var x = 0; x < points.length; x ++) {
+            for(var y = 0; y < points[x].length; y ++) {
+                if (points[x][y] > 0) {
+                    if (x > maxX) {
+                        maxX = x;
+                    }
+                    if (y > maxY) {
+                        maxY = y;
+                    }
+                }
+            }
+        }
+        for(var x = 0; x <= maxX; x ++) {
+            var currentLine = "";
+            for(var y = 0; y <= maxY; y ++) {
+                currentLine += points[y][x];
+            }
+            System.out.println("Current Line: " + currentLine);
+        }
+    }
 
 }

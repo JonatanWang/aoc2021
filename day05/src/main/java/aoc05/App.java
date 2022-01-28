@@ -67,27 +67,33 @@ public class App {
                 for(var j = start; j <= end; j ++) {
                     board.points[j][line.y1] ++;
                 }
-            } else if (line.x1 == line.y1 && line.x2 == line.y2){
-
-                var start = Integer.min(line.x1, line.x2);
-                var end = Integer.max(line.x1, line.x2);
-
-                for (var i= start; i <= end; i ++) {
-                    board.points[i][i] ++;
+            }
+            else if (line.x1 < line.x2 && line.y1 < line.y2){
+                var numOfPoints = line.x2 - line.x1 + 1;
+                for (var i = 0; i < numOfPoints; i ++) {
+                    board.points[line.x1 + i][line.y1 + i] ++;
                 }
-
-            } else if (line.x1 == line.y2 && line.x2 == line.y1) {
-
-                var start= Integer.min(line.x1, line.x2);
-                var end = Integer.max(line.x1, line.x2);
-
-                for (int i= start, j = end; i <= end && j >= start; i ++, j --) {
-                    board.points[i][j] ++;
+            } else if (line.x1 < line.x2 && line.y1 > line.y2){
+                var numOfPoints = line.x2 - line.x1 + 1;
+                for (var i = 0; i < numOfPoints; i ++) {
+                    board.points[line.x1 + i][line.y1 - i] ++;
                 }
-            } else {
-
+            }
+            else if (line.x1 > line.x2 && line.y1 < line.y2){
+                var numOfPoints = line.x1 - line.x2 + 1;
+                for (var i = 0; i < numOfPoints; i ++) {
+                    board.points[line.x1 - i][line.y1 + i] ++;
+                }
+            }
+            else if (line.x1 > line.x2 && line.y1 > line.y2){
+                var numOfPoints = line.x1 - line.x2 + 1;
+                for (var i = 0; i < numOfPoints; i ++) {
+                    board.points[line.x1 - i][line.y1 - i] ++;
+                }
             }
         }
+
+        //board.show();
 
         var res = Stream
                 .of(board.points)

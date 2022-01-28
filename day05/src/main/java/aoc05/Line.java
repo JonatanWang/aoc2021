@@ -1,5 +1,8 @@
 package aoc05;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Line {
     public int x1, x2, y1, y2;
 
