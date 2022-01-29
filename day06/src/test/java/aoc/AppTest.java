@@ -26,6 +26,6 @@ public class AppTest {
     }
 
     @Test void part2MultipliesInput() {
-        assertEquals(2, classUnderTest.getSolutionPart2());
+        assertEquals(Long.parseLong("26984457539"), classUnderTest.getSolutionPart2());
     }
 }

@@ -6,10 +6,7 @@ package aoc;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class App {
@@ -49,13 +46,67 @@ public class App {
         return res;
     }
 
-    public Integer getSolutionPart2() {
-        var cnt = 0;
-        for (int i = 0; i < input.size() - 3; i ++) {
-            var sumOfWindow1 = input.get(i) + input.get(i + 1) + input.get(i + 2);
-            var sumOfWindow2 = input.get(i + 1) + input.get(i + 2) + input.get(i + 3);
-            if (sumOfWindow2 > sumOfWindow1) cnt ++;
+    public Long getSolutionPart2() {
+        var cnt = 0l;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(Integer integer : input) {
+            if (map.containsKey(integer)) {
+                var value = map.get(integer);
+                map.put(integer, value + 1);
+            } else {
+                map.put(integer, 1);
+            }
         }
+
+        var days = 256;
+        while(days > 0) {
+
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                var key = entry.getKey(); // ageOfFish
+                var value = entry.getValue(); // numOfFishWithThisAge
+                if (key == 0) {
+                    // Spawn child fish
+                    if (map.containsKey(8)) {
+                        var oldValue = map.get(8);
+                        map.put(8, oldValue + 1);
+                    } else {
+                        map.put(8, 1);
+                    }
+
+                    // Increase numOfFish of age 6
+                    if (map.containsKey(6)) {
+                        var oldValue = map.get(6);
+                        map.put(6, oldValue + 1);
+                    } else {
+                        map.put(6, 1);
+                    }
+
+                    // Decrease numOfFish of 0 to 0
+                    map.put(key, 0);
+                } else {
+
+                    // Decrease numOfFish of current age/key
+                    map.put(key, value - 1);
+                    // Increase numOfFish of next age/key
+                    var nextKey = key - 1;
+                    if (map.containsKey(nextKey)) {
+                        var valueOfNextKey = map.get(nextKey);
+                        map.put(nextKey, valueOfNextKey - 1);
+                    } else {
+                        map.put(nextKey, 1);
+                    }
+                }
+            }
+
+            days --;
+        }
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            var value = entry.getValue(); // numOfFishWithThisAge
+            cnt += value;
+        }
+
+
         return cnt;
     }
 
@@ -63,7 +114,7 @@ public class App {
 
         List<Integer> input = parseInput("input.txt");
         String part = System.getenv("part") == null ? "part1" : System.getenv("part");
-        var loop =  256;
+        var loop =  80;
         if (part.equals("part2"))
             System.out.println(new App(input).getSolutionPart2());
         else
