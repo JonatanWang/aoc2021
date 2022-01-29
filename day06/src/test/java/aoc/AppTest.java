@@ -5,6 +5,7 @@ package aoc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +21,8 @@ public class AppTest {
     }
 
     @Test void part1SumsInput() {
-        var loop = 18;
-        assertEquals(26, classUnderTest.getSolutionPart1(loop));
+        var loop = 80;
+        assertEquals(5934, classUnderTest.getSolutionPart1(loop));
     }
 
     @Test void part2MultipliesInput() {

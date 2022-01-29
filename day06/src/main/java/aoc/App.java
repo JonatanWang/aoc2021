@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,22 +21,27 @@ public class App {
 
     public Integer getSolutionPart1(int loop) {
         var res = 0;
+        var tmp = new ArrayList<>(input);
+        /**
         var tmp = new ArrayList<Integer>();
+
         for (Integer integer : input) {
             tmp.add(integer);
-        }
+        }*/
 
         while(loop != 0) {
-            for(var i = 0; i < input.size(); i ++) {
-                if (input.get(i) == 0) {
+            var initialInputSize = tmp.size();
+            for(var i = 0; i < initialInputSize; i ++) {
+                if (tmp.get(i) == 0) {
                     tmp.add(8);
-                    input.set(i, 6);
+                    tmp.set(i, 6);
                 } else {
-                    var newValue = input.get(i) - 1;
+                    var newValue = tmp.get(i) - 1;
                     tmp.set(i, newValue);
                 }
             }
-            input = tmp;
+
+            loop --;
         }
 
         res = tmp.size();
@@ -57,7 +63,7 @@ public class App {
 
         List<Integer> input = parseInput("input.txt");
         String part = System.getenv("part") == null ? "part1" : System.getenv("part");
-        var loop = 80;
+        var loop =  256;
         if (part.equals("part2"))
             System.out.println(new App(input).getSolutionPart2());
         else
@@ -69,6 +75,21 @@ public class App {
         var input = Files.lines(Path.of(filename))
                 .map(s -> s.split(",")).collect(Collectors.toList());
 
-        return Arrays.stream(input.get(0)).map(Integer::parseInt).collect(Collectors.toList());
+        var list2 = Files.lines(Path.of(filename)).findFirst().get().split(",");
+                //.stream().map(Integer::parseInt).collect(Collectors.toList())
+
+        var list =
+                Arrays
+                .stream(
+                        Files.lines(Path.of(filename))
+                        .map(s -> s.split(","))
+                        .findFirst()
+                        .get()
+                )
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        return list;
+        //return Arrays.stream(input.get(0)).map(Integer::parseInt).collect(Collectors.toList());
     }
 }
