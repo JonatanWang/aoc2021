@@ -48,66 +48,55 @@ public class App {
 
     public Long getSolutionPart2() {
         var cnt = 0l;
-        Map<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Long> map = new HashMap<>();
         for(Integer integer : input) {
             if (map.containsKey(integer)) {
                 var value = map.get(integer);
                 map.put(integer, value + 1);
             } else {
-                map.put(integer, 1);
+                map.put(integer, 1l);
             }
         }
 
         var days = 256;
         while(days > 0) {
 
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-                var key = entry.getKey(); // ageOfFish
-                var value = entry.getValue(); // numOfFishWithThisAge
+            var keySet = map.keySet();
+            var tmpMap = new HashMap<Integer, Long>();
+            for (Integer key : keySet) {
+
+                var value = map.get(key);
+                //System.out.println("k = " + key + " | value = " + value);
                 if (key == 0) {
-                    // Spawn child fish
-                    if (map.containsKey(8)) {
-                        var oldValue = map.get(8);
-                        map.put(8, oldValue + 1);
-                    } else {
-                        map.put(8, 1);
-                    }
-
-                    // Increase numOfFish of age 6
-                    if (map.containsKey(6)) {
-                        var oldValue = map.get(6);
-                        map.put(6, oldValue + 1);
-                    } else {
-                        map.put(6, 1);
-                    }
-
-                    // Decrease numOfFish of 0 to 0
-                    map.put(key, 0);
+                    addKey6(tmpMap, value);
+                    tmpMap.put(8, value);
+                } else if (key == 7) {
+                    addKey6(tmpMap, value);
                 } else {
-
-                    // Decrease numOfFish of current age/key
-                    map.put(key, value - 1);
-                    // Increase numOfFish of next age/key
-                    var nextKey = key - 1;
-                    if (map.containsKey(nextKey)) {
-                        var valueOfNextKey = map.get(nextKey);
-                        map.put(nextKey, valueOfNextKey - 1);
-                    } else {
-                        map.put(nextKey, 1);
-                    }
+                    var newKey = key - 1;
+                    tmpMap.put(newKey, value);
                 }
             }
-
+            map = tmpMap;
             days --;
         }
 
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        for (Map.Entry<Integer, Long> entry : map.entrySet()) {
             var value = entry.getValue(); // numOfFishWithThisAge
             cnt += value;
         }
 
 
         return cnt;
+    }
+
+    private void addKey6(HashMap<Integer, Long> tmpMap, Long value) {
+        if (tmpMap.keySet().contains(6)) {
+            var valueToKey6 = tmpMap.get(6);
+            tmpMap.put(6, valueToKey6 + value);
+        } else {
+            tmpMap.put(6, value);
+        }
     }
 
     public static void main(String[] args) throws IOException {
